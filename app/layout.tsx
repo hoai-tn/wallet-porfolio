@@ -1,7 +1,8 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/app/components/NavBar";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import SideBar from "@/components/SideBar";
+import SideBarDesktop from "@/app/components/Sidebar/SidebarDesktop";
+import SidebarMobile from "@/app/components/Sidebar/SidebarMobile";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,10 +18,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+        />
+      </head>
       <body className={inter.className}>
-        <div className="flex relative">
-          <SideBar />
-          <div>
+        <div className="block md:flex relative">
+          <SideBarDesktop />
+          <SidebarMobile/>
+          <div className="w-full p-[30px]">
             <NavBar />
             {children}
           </div>

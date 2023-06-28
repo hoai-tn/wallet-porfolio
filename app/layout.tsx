@@ -1,8 +1,10 @@
+"use client"
 import NavBar from "@/app/components/NavBar";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import SideBarDesktop from "@/app/components/Sidebar/SidebarDesktop";
 import SidebarMobile from "@/app/components/Sidebar/SidebarMobile";
+import Providers from "./ThemeProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,14 +27,16 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <div className="block md:flex relative">
-          <SideBarDesktop />
-          <SidebarMobile/>
-          <div className="w-full p-[30px]">
-            <NavBar />
-            {children}
+        <Providers>
+          <div className="block md:flex relative">
+            <SideBarDesktop />
+            <SidebarMobile />
+            <div className="w-full p-[30px]">
+              <NavBar />
+              {children}
+            </div>
           </div>
-        </div>
+        </Providers>
       </body>
     </html>
   );

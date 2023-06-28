@@ -3,9 +3,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import styles from "./styles";
+import ThemeSwitcher from "@/app/ThemeSwitcher";
 
 const SideBar = () => {
-  const [isFullSideBar, setIsFullSideBar] = useState<Boolean>(false);
+  const [isFullSideBar, setIsFullSideBar] = useState<Boolean>(true);
   const path = usePathname();
 
   return (
@@ -20,11 +21,18 @@ const SideBar = () => {
       </div>
       <div className="px-4">
         {isFullSideBar ? (
-          <img
-            className={styles.logo}
-            src="https://portfolio.metamask.io/static/js/../../static/media/portfolio-logo-dark.08cc3f1d5f4b7d89668022814a47623d.svg"
-            alt="MetaMask"
-          />
+          <>
+            <img
+              className={styles.logo}
+              src="https://portfolio.metamask.io/static/js/../../static/media/portfolio-logo-dark.08cc3f1d5f4b7d89668022814a47623d.svg"
+              alt="MetaMask"
+            />
+            <img
+              className="h-8 w-auto dark:hidden outline-none"
+              src="https://portfolio.metamask.io/static/js/../../static/media/portfolio-logo.f352f3a0c2db26a036ed52bb46d8738f.svg"
+              alt="MetaMask"
+            />
+          </>
         ) : (
           <img
             className="h-7 w-7 outline-none"
@@ -45,7 +53,7 @@ const SideBar = () => {
               {path === "/" && <div className={styles.navLinkBorder}></div>}
               <span
                 className={`material-symbols-outlined ${
-                  path === "/" ? "text-blue-300" : ""
+                  path === "/" ? "dark:text-blue-300 text-blue-700" : ""
                 }`}
                 style={{ fontSize: 18 }}
               >
@@ -64,7 +72,7 @@ const SideBar = () => {
               {path === "/buy" && <div className={styles.navLinkBorder}></div>}
               <span
                 className={`material-symbols-outlined ${
-                  path === "/buy" ? "text-blue-300" : ""
+                  path === "/buy" ? "dark:text-blue-300 text-blue-700" : ""
                 }`}
                 style={{ fontSize: 18 }}
               >
@@ -83,7 +91,7 @@ const SideBar = () => {
               {path === "/swap" && <div className={styles.navLinkBorder}></div>}
               <span
                 className={`material-symbols-outlined ${
-                  path === "/swap" ? "text-blue-300" : ""
+                  path === "/swap" ? "dark:text-blue-300 text-blue-700" : ""
                 }`}
                 style={{ fontSize: 18 }}
               >
@@ -104,7 +112,7 @@ const SideBar = () => {
               )}
               <span
                 className={`material-symbols-outlined ${
-                  path === "/bridge" ? "text-blue-300" : ""
+                  path === "/bridge" ? "dark:text-blue-300 text-blue-700" : ""
                 }`}
                 style={{ fontSize: 18 }}
               >
@@ -125,7 +133,7 @@ const SideBar = () => {
               )}
               <span
                 className={`material-symbols-outlined ${
-                  path === "/setting" ? "text-blue-300" : ""
+                  path === "/setting" ? "dark:text-blue-300 text-blue-700" : ""
                 }`}
                 style={{ fontSize: 18 }}
               >
@@ -150,7 +158,7 @@ const SideBar = () => {
           {isFullSideBar && <div>Support</div>}
         </div>
         <div className="px-4 py-2 my-5 text-[#a8abbe]">
-          <div>Switch</div>
+          <ThemeSwitcher />
         </div>
         <div className={styles.navLink + " border-t py-4 mb-0"}>
           {isFullSideBar && <div className="font-sm">Terms of service</div>}

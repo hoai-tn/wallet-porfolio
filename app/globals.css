@@ -18,6 +18,8 @@ body {
 } */
 
 :root {
+  --primary-color: #4f87f6;
+  --secondary-color: #225ed4;
   --dark: #101213;
   --light: #f7f7f7;
   --background: var(--light);

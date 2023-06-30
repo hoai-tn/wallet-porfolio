@@ -1,4 +1,9 @@
+import ConnectWalletAuth from "./components/ConnectWalletAuth";
+
 export default function Home() {
-  return <div>Home page</div>;
+  return (
+    <div>
+      <ConnectWalletAuth></ConnectWalletAuth>
+    </div>
+  );
 }
-  

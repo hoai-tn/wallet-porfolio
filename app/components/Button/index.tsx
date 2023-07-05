@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 
 interface IButton {
@@ -20,6 +21,7 @@ const Button = ({
 }: IButton) => {
   return (
     <button
+      onClick={handleClick}
       className={`bg-${color} px-4 py-2 rounded-${rounded} hover:bg-[${hoverBg}] ${className}`}
       style={{ width, background: color }}
     >

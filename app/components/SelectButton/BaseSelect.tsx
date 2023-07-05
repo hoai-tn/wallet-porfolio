@@ -2,8 +2,6 @@
 import { Children, useEffect, useRef, useState } from "react";
 
 export const BaseSelect = ({ name, title, selectItem, children }) => {
-  console.log({ selectItem });
-
   const btn = useRef<HTMLButtonElement>(null);
   const dropList = useRef<HTMLDivElement>(null);
   const [isOpenList, setIsOpenList] = useState(false);

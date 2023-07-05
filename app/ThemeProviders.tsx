@@ -8,8 +8,6 @@ export default function Providers({ children }) {
   useEffect(() => {
     setMounted(true);
   }, []);
-console.log('wtf');
-
   if (!mounted) return <> {children}</>;
   return <ThemeProvider attribute="class">{children}</ThemeProvider>;
 }

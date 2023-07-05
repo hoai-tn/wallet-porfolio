@@ -1,4 +1,7 @@
-export default function About() {
-  return <>Buy</>;
-};
+"use client"
+import { useGlobalContext } from "../Context/store";
 
+export default function About() {
+  const { accounts } = useGlobalContext();
+  return <>Buy {accounts.join(",")}</>;
+}

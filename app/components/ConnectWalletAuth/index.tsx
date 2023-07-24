@@ -5,32 +5,88 @@ import Link from "next/link";
 import { ethers } from "ethers";
 import { useGlobalContext } from "@/app/Context/store";
 
+import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import axios from "axios"
+import { signIn } from "next-auth/react";
+import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
+import { useRouter } from "next/router";
+import { useAuthRequestChallengeEvm } from "@moralisweb3/next";
+
 const ConnectWalletAuth = () => {
+  const { connectAsync } = useConnect();
+  const { disconnectAsync } = useDisconnect();
+  const { isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { requestChallengeAsync } = useAuthRequestChallengeEvm();
+  // const { push } = useRouter();
+
   const { setAccounts } = useGlobalContext();
   async function requestAccount() {
-    if (window?.ethereum) {
-      try {
-        // const accounts = await window.ethereum.request();
+    try {
+      // const accounts = await window.ethereum.request();
 
-        const provider = new ethers.BrowserProvider(window.ethereum);
+      // const provider = new ethers.BrowserProvider(window.ethereum);
 
-        // MetaMask requires requesting permission to connect users accounts
-        await provider.send("eth_requestAccounts", []);
-        const signer = await provider.getSigner();
-        setAccounts(signer);
-        const balance = await provider.getBalance("ricmoo.eth");
-        console.log({
-          signer: signer.address,
-          balance: ethers.formatEther(balance),
-        });
-      } catch (error) {
-        console.log(error);
-
-        console.log("error fetch");
+      // // MetaMask requires requesting permission to connect users accounts
+      // await provider.send("eth_requestAccounts", []);
+      // const signer = await provider.getSigner();
+      // setAccounts(signer);
+      // const balance = await provider.getBalance("ricmoo.eth");
+      // console.log({
+      //   signer: signer.address,
+      //   balance: ethers.formatEther(balance),
+      // });
+      const userData = { network: "evm" };
+      if (isConnected) {
+        console.log('disconect');
+        
+        await disconnectAsync();
       }
+
+      const { account, chain } = await connectAsync({
+        connector: new MetaMaskConnector(),
+      });
+      userData.address = account;
+      userData.chain = chain.id;
+
+      const { message } = await requestChallengeAsync({
+        address: account,
+        chainId: chain.id,
+      });
+      const { data } = await axios.post("api/auth/request-message", userData, {
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      // const message = data.message
+      console.log({message});
+      
+      const signature = await signMessageAsync({ message });
+
+      console.log({signature,  data });
+      // const { url } = await signIn("moralis-auth", {
+      //   message,
+      //   signature,
+      //   redirect: false,
+      //   callbackUrl: "/user",
+      // });
+    } catch (error) {
+      console.log(error);
+
+      console.log("error fetch");
     }
   }
-
+const  handleImport = async () => {
+  try {
+    
+    const {data} = await axios.post("/api/auth/request-message")
+    console.log({data});
+  } catch (error) {
+    console.log({error});
+    
+  }
+  
+}
   return (
     <div className=" flex flex-col gap-y-5 mt-5 text-center sm:mx-auto sm:w-full sm:max-w-md">
       <h5 className="text-2xl">Connect your wallet</h5>
@@ -71,6 +127,7 @@ const ConnectWalletAuth = () => {
             hoverBg="#225ed4"
             rounded="full"
             className=" absolute right-[1px] bottom-[1px]"
+            handleClick={handleImport}
           >
             Import
           </Button>

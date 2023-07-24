@@ -1,7 +1,10 @@
+import { useSession } from "next-auth/react";
 import { Currencies } from "./SelectButton/CurrenciesSelect";
 import { GasSelect } from "./SelectButton/GasSelect";
 
 const NavBar = () => {
+
+
   return (
     <div className="flex items-center">
       <div className="flex gap-x-4 items-center">

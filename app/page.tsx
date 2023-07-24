@@ -4,6 +4,7 @@ import ConnectWalletAuth from "./components/ConnectWalletAuth";
 import { useGlobalContext } from "./Context/store";
 import { ethers } from "ethers";
 import axios from "axios";
+import { getSession } from "next-auth/react";
 
 export default function Home() {
   const { accounts } = useGlobalContext();
@@ -19,10 +20,15 @@ export default function Home() {
   //     // const data = response.data;
   //     // const etherToUSDExchangeRate = data.ethereum.usd;
   //     // console.log({etherToUSDExchangeRate});
-      
+
   //   };
   //   getBalance();
   // }, []);
+  (async function () {
+    const session = await getSession();
+    console.log({ session });
+  })();
+
   return (
     <div>
       {accounts.length === 0 ? (
@@ -31,7 +37,9 @@ export default function Home() {
         <div>
           <div>
             <div>Portfolio value</div>
-            <div className="text-3xl font-bold mt-2">${accounts[0]?.balance}</div>
+            <div className="text-3xl font-bold mt-2">
+              ${accounts[0]?.balance}
+            </div>
           </div>
         </div>
       )}

@@ -7,6 +7,25 @@ import SidebarMobile from "@/app/components/Sidebar/SidebarMobile";
 import Providers from "./ThemeProviders";
 import { GlobalContextProvider } from "./Context/store";
 
+import { createConfig, configureChains, WagmiConfig } from "wagmi";
+import { publicProvider } from "wagmi/providers/public";
+import { SessionProvider } from "next-auth/react";
+import { mainnet } from "wagmi/chains";
+
+const { publicClient, webSocketPublicClient } = configureChains(
+  [mainnet],
+  [publicProvider()]
+);
+
+const config = createConfig({
+  autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
+});
+
+
+
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -28,18 +47,22 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <GlobalContextProvider>
-          <Providers>
-            <div className="block md:flex relative">
-              <SideBarDesktop />
-              <SidebarMobile />
-              <div className="w-full p-[30px]">
-                <NavBar />
-                {children}
-              </div>
-            </div>
-          </Providers>
-        </GlobalContextProvider>
+        <WagmiConfig config={config}>
+          <SessionProvider refetchInterval={0}>
+            <GlobalContextProvider>
+              <Providers>
+                <div className="block md:flex relative">
+                  <SideBarDesktop />
+                  <SidebarMobile />
+                  <div className="w-full p-[30px]">
+                    <NavBar />
+                    {children}
+                  </div>
+                </div>
+              </Providers>
+            </GlobalContextProvider>
+          </SessionProvider>
+        </WagmiConfig>
       </body>
     </html>
   );

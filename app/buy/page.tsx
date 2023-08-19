@@ -3,5 +3,5 @@ import { useGlobalContext } from "../Context/store";
 
 export default function About() {
   const { accounts } = useGlobalContext();
-  return <>Buy {accounts.join(",")}</>;
+  return <>Buy {JSON.stringify(accounts)}</>;
 }

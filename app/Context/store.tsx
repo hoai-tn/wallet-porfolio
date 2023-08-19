@@ -1,7 +1,6 @@
-"use client";
-
-import { Contract, ethers } from "ethers";
+// import {  ethers } from "ethers";
 import { createContext, useContext, useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 const GlobalContext = createContext({
   accounts: [],
@@ -11,6 +10,7 @@ const GlobalContext = createContext({
 
 export const GlobalContextProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
+  const { isAuthenticated,setAuthenticated } = useAuth();
   useEffect(() => {
     async function fetchData() {
       // You can await here
@@ -18,8 +18,7 @@ export const GlobalContextProvider = ({ children }) => {
         const getAccounts = await window.ethereum.request({
           method: "eth_accounts",
         });
-        
-
+        setAuthenticated();
         // const abi = [
         //   "function name() view returns (string)",
         //   "function decimals() view returns (uint8)",
@@ -34,32 +33,29 @@ export const GlobalContextProvider = ({ children }) => {
         // const symbol = await contract.symbol();
         // console.log({name, ba,symbol});
 
+        // const newAccounts = await Promise.all(
+        //   getAccounts.map(async (address: string) => {
+        //     const provider = new ethers.JsonRpcProvider(
+        //       "https://rpc.sepolia.org/"
+        //     );
+        //     const balance = await provider.getBalance(
+        //       ethers.getAddress(address)
+        //     );
 
+        //     // const tokenContract = new ethers.Contract(
+        //     //   "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+        //     //   tokenAbi,
+        //     //   provider
+        //     // );
+        //     // const balances = await tokenContract.balanceOf(address);
+        //     // console.log({ balances });
 
-
-
-        const newAccounts = await Promise.all(
-          getAccounts.map(async (address: string) => {
-            const provider = new ethers.JsonRpcProvider(
-              "https://rpc.sepolia.org/"
-            );
-            const balance = await provider.getBalance(
-              ethers.getAddress(address)
-            );
-
-
-            // const tokenContract = new ethers.Contract(
-            //   "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-            //   tokenAbi,
-            //   provider
-            // );
-            // const balances = await tokenContract.balanceOf(address);
-            // console.log({ balances });
-
-            return { address, balance: ethers.formatEther(balance) };
-          })
-        );
-        setAccounts(newAccounts);
+        //     return { address, balance: ethers.formatEther(balance) };
+        //   })
+        // );
+        console.log({isAuthenticated});
+        
+        setAccounts(getAccounts);
 
         // const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
         // const data = response.data;

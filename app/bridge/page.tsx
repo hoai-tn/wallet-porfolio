@@ -1,8 +1,9 @@
 "use client";
-import useAuth from "../hooks/useAuth";
+
+import { useGlobalContext } from "../Context/store";
 
 export default function About() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useGlobalContext();
   console.log(isAuthenticated);
 
   return <>{JSON.stringify(isAuthenticated)} a</>;

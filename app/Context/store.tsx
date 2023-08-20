@@ -1,16 +1,18 @@
 // import {  ethers } from "ethers";
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
 
 const GlobalContext = createContext({
   accounts: [],
+  isAuthenticated: false,
   setAccounts: () => [],
   provider: {},
 });
 
 export const GlobalContextProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
-  const { isAuthenticated,setAuthenticated } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     async function fetchData() {
       // You can await here
@@ -18,7 +20,13 @@ export const GlobalContextProvider = ({ children }) => {
         const getAccounts = await window.ethereum.request({
           method: "eth_accounts",
         });
-        setAuthenticated();
+
+        const { data } = await axios.get("api/tokens", {
+          params: { address: getAccounts[0], chain: 0 },
+        });
+        console.log(data);
+
+        setIsAuthenticated(true);
         // const abi = [
         //   "function name() view returns (string)",
         //   "function decimals() view returns (uint8)",
@@ -53,8 +61,8 @@ export const GlobalContextProvider = ({ children }) => {
         //     return { address, balance: ethers.formatEther(balance) };
         //   })
         // );
-        console.log({isAuthenticated});
-        
+        console.log({ isAuthenticated });
+
         setAccounts(getAccounts);
 
         // const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
@@ -68,7 +76,7 @@ export const GlobalContextProvider = ({ children }) => {
     fetchData();
   }, []);
   return (
-    <GlobalContext.Provider value={{ accounts, setAccounts }}>
+    <GlobalContext.Provider value={{ accounts, setAccounts, isAuthenticated }}>
       {children}
     </GlobalContext.Provider>
   );

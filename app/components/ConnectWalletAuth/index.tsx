@@ -1,36 +1,8 @@
-"use client";
 import React from "react";
 import Button from "../Button";
 import Link from "next/link";
-import { ethers } from "ethers";
-import { useGlobalContext } from "@/app/Context/store";
 
-const ConnectWalletAuth = () => {
-  const { setAccounts } = useGlobalContext();
-  async function requestAccount() {
-    if (window?.ethereum) {
-      try {
-        // const accounts = await window.ethereum.request();
-
-        const provider = new ethers.BrowserProvider(window.ethereum);
-
-        // MetaMask requires requesting permission to connect users accounts
-        await provider.send("eth_requestAccounts", []);
-        const signer = await provider.getSigner();
-        setAccounts(signer);
-        const balance = await provider.getBalance("ricmoo.eth");
-        console.log({
-          signer: signer.address,
-          balance: ethers.formatEther(balance),
-        });
-      } catch (error) {
-        console.log(error);
-
-        console.log("error fetch");
-      }
-    }
-  }
-
+const ConnectWalletAuth = ({ requestAccount }) => {
   return (
     <div className=" flex flex-col gap-y-5 mt-5 text-center sm:mx-auto sm:w-full sm:max-w-md">
       <h5 className="text-2xl">Connect your wallet</h5>

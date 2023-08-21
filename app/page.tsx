@@ -1,38 +1,61 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ConnectWalletAuth from "./components/ConnectWalletAuth";
 import { useGlobalContext } from "./Context/store";
 import { ethers } from "ethers";
 import axios from "axios";
+import Dashboard from "./components/Dashboard";
 
 export default function Home() {
-  const { accounts } = useGlobalContext();
-  const [balance, setBalance] = useState(0);
-  // useEffect(() => {
-  //   const getBalance = async () => {
-  //     console.log({ accounts });
-  //     const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org/");
-  //     const balance = await provider.getBalance(accounts[0]);
-  //     setBalance(ethers.formatEther(balance));
+  const {
+    isLoading,
+    setAccounts,
+    isAuthenticated,
+    setTokens,
+    setIsAuthenticated,
+  } = useGlobalContext();
+  console.log("home page");
 
-  //     // const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-  //     // const data = response.data;
-  //     // const etherToUSDExchangeRate = data.ethereum.usd;
-  //     // console.log({etherToUSDExchangeRate});
-      
-  //   };
-  //   getBalance();
-  // }, []);
+  async function requestAccount() {
+    if (window?.ethereum) {
+      try {
+        // const accounts = await window.ethereum.request();
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        // MetaMask requires requesting permission to connect users accounts
+        await provider.send("eth_requestAccounts", []);
+        const { address } = await provider.getSigner();
+        setIsAuthenticated(true);
+        setAccounts([address]);
+        const { data } = await axios.get("api/tokens/", {
+          params: { address, chain: 0 },
+        });
+        setTokens(data);
+        // const balance = await provider.getBalance("ricmoo.eth");
+        // console.log({
+        //   signer: signer.address,
+        //   balance: ethers.formatEther(balance),
+        // });
+      } catch (error) {
+        console.log(error);
+
+        console.log("error fetch");
+      }
+    }
+  }
+
   return (
     <div>
-      {accounts.length === 0 ? (
-        <ConnectWalletAuth></ConnectWalletAuth>
+      {isLoading ? (
+        <div>Loading</div>
       ) : (
         <div>
-          <div>
-            <div>Portfolio value</div>
-            <div className="text-3xl font-bold mt-2">${accounts[0]?.balance}</div>
-          </div>
+          {!isAuthenticated ? (
+            <ConnectWalletAuth
+              requestAccount={requestAccount}
+            ></ConnectWalletAuth>
+          ) : (
+            <Dashboard />
+          )}
         </div>
       )}
     </div>

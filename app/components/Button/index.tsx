@@ -4,11 +4,11 @@ import React from "react";
 interface IButton {
   color: string;
   rounded: string;
-  width: string;
+  width?: string;
   hoverBg: string;
-  handleClick: () => void;
+  handleClick?: () => void;
   children: JSX.Element;
-  className: string;
+  className?: string;
 }
 const Button = ({
   className = "",

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface IToken {
   token_address: string;
   symbol: string;
@@ -10,3 +12,16 @@ export interface IToken {
   usdPrice: Number;
   usdBalance: Number;
 }
+
+interface ISelectItem {
+    text: string;
+    value: number;
+    img?: string;
+    description?: string;
+  }
+ export interface IBaseSelect {
+    name: string;
+    title?: string;
+    selectItem: ISelectItem;
+    children: ReactNode;
+  }

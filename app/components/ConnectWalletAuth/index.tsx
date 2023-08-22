@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../Button";
 import Link from "next/link";
 
-const ConnectWalletAuth = ({ requestAccount }) => {
+const ConnectWalletAuth = ({ requestAccount }: any) => {
   return (
     <div className=" flex flex-col gap-y-5 mt-5 text-center sm:mx-auto sm:w-full sm:max-w-md">
       <h5 className="text-2xl">Connect your wallet</h5>
@@ -15,14 +15,15 @@ const ConnectWalletAuth = ({ requestAccount }) => {
         hoverBg="#225ed4"
         rounded="full"
         width="100%"
-        className="flex items-center  gap-x-2 justify-center mx-auto"
         handleClick={requestAccount}
       >
-        <img
-          src="https://portfolio.metamask.io/static/media/metamask-fox.7db94670ec6dc4d4c6c9e18af96281d8.svg"
-          alt=""
-        />
-        <span>Connect MetaMask</span>
+        <div className="flex items-center  gap-x-2 justify-center mx-auto">
+          <img
+            src="https://portfolio.metamask.io/static/media/metamask-fox.7db94670ec6dc4d4c6c9e18af96281d8.svg"
+            alt=""
+          />
+          <span>Connect MetaMask</span>
+        </div>
       </Button>
 
       <div className="flex items-center gap-x-4 ">
@@ -44,7 +45,7 @@ const ConnectWalletAuth = ({ requestAccount }) => {
             rounded="full"
             className=" absolute right-[1px] bottom-[1px]"
           >
-            Import
+            <span>Import</span>
           </Button>
         </div>
       </div>

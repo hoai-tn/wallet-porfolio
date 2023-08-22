@@ -1,10 +1,10 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
 import ConnectWalletAuth from "./components/ConnectWalletAuth";
 import { useGlobalContext } from "./Context/store";
 import { ethers } from "ethers";
 import axios from "axios";
 import Dashboard from "./components/Dashboard";
+import { IToken } from "./types";
 
 export default function Home() {
   const {
@@ -23,10 +23,10 @@ export default function Home() {
         const provider = new ethers.BrowserProvider(window.ethereum);
         // MetaMask requires requesting permission to connect users accounts
         await provider.send("eth_requestAccounts", []);
-        const { address } = await provider.getSigner();
+        const { address }: { address: string } = await provider.getSigner();
         setIsAuthenticated(true);
         setAccounts([address]);
-        const { data } = await axios.get("api/tokens/", {
+        const { data }: { data: IToken[] } = await axios.get("api/tokens/", {
           params: { address, chain: 0 },
         });
         setTokens(data);

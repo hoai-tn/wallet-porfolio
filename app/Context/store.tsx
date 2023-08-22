@@ -9,10 +9,10 @@ import { IToken } from "../types";
 const GlobalContext = createContext<{
   accounts: string[];
   isAuthenticated: Boolean;
-  setIsAuthenticated: () => Boolean;
-  setAccounts: () => [];
+  setIsAuthenticated: Dispatch<SetStateAction<Boolean>>;
+  setAccounts: Dispatch<SetStateAction<string[]>>;
   tokens: IToken[];
-  setTokens: () => [];
+  setTokens: Dispatch<SetStateAction<IToken[]>>;
   isLoading: Boolean;
 }>({
   accounts: [],
@@ -29,9 +29,9 @@ export const GlobalContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState<string[]>([]);
   const [tokens, setTokens] = useState<IToken[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {

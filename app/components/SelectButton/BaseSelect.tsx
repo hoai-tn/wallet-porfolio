@@ -1,7 +1,13 @@
 "use client";
-import { Children, useEffect, useRef, useState } from "react";
+import { IBaseSelect } from "@/app/types";
+import { Children, ReactNode, useEffect, useRef, useState } from "react";
 
-export const BaseSelect = ({ name, title, selectItem, children }) => {
+export const BaseSelect = ({
+  name,
+  title,
+  selectItem,
+  children,
+}: IBaseSelect) => {
   const btn = useRef<HTMLButtonElement>(null);
   const dropList = useRef<HTMLDivElement>(null);
   const [isOpenList, setIsOpenList] = useState(false);
@@ -16,8 +22,9 @@ export const BaseSelect = ({ name, title, selectItem, children }) => {
   }, [isOpenList]);
 
   //create a function in your component to handleOutsideClicks
-  const handleOutsideClicks = (event: MouseEvent | "") => {
-    const targetEl = event?.target || "";
+  const handleOutsideClicks = (event: MouseEvent) => {
+    const targetEl: Node | null =
+      (event?.target && (event.target as Node)) || null;
     if (
       isOpenList &&
       dropList.current &&

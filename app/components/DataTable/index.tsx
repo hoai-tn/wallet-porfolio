@@ -14,7 +14,7 @@ export const TableRow = ({
   children,
   className,
 }: {
-  children: ReactNode | string | number;
+  children: ReactNode;
   className?: string;
 }) => {
   return <tr className={`${className}`}>{children}</tr>;
@@ -24,7 +24,7 @@ export const TableCell = ({
   children,
   className,
 }: {
-  children: ReactNode | string | number;
+  children: ReactNode;
   className?: string;
 }) => {
   return (
@@ -34,7 +34,7 @@ export const TableCell = ({
   );
 };
 
-const DataTable = ({ children }: { children: ReactNode | string | number }) => {
+const DataTable = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

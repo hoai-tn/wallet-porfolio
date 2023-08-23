@@ -23,14 +23,16 @@ export const TableRow = ({
 export const TableCell = ({
   children,
   className,
+  colspan = 1,
 }: {
   children: ReactNode;
   className?: string;
+  colspan?: number;
 }) => {
   return (
-    <th scope="col" className={`px-6 py-4 ${className}`}>
+    <td colSpan={colspan} scope="col" className={`px-6 py-4 ${className}`}>
       {children}
-    </th>
+    </td>
   );
 };
 

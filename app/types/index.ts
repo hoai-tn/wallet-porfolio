@@ -25,3 +25,8 @@ interface ISelectItem {
     selectItem: ISelectItem;
     children: ReactNode;
   }
+
+ export interface ITokenTableProps {
+    tokens: IToken[];
+    totalBalance: Number;
+  }

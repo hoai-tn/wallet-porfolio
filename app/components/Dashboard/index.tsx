@@ -1,34 +1,36 @@
-import React, { Fragment } from "react";
-import DataTable, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "../DataTable";
+import React, { Fragment, useMemo } from "react";
+
 import { useGlobalContext } from "@/app/Context/store";
 import { IToken } from "@/app/types";
 import { Tab } from "@headlessui/react";
+import useFetch from "../hooks/useFetch";
+import TokenTable from "../TokenTable";
+import axios from "axios";
+import TransactionsList from "../TransactionsList";
 
 const Tabs = [{ title: "Tokens" }, { title: "Transactions" }];
 
+
+
 const Dashboard = () => {
   const { accounts, tokens } = useGlobalContext();
-  const totalBalance =
-    tokens.length &&
-    tokens
-      .map((e) => e.usdBalance)
-      .reduce((a, b) => Number(a) + Number(b) || 0);
 
-  const portfolioPercent = (balance: Number) => {
-    return ((balance / totalBalance) * 100).toFixed(2);
-  };
+  const totalBalance = useMemo(
+    () =>
+      tokens?.length &&
+      tokens
+        .map((e) => e.usdBalance)
+        .reduce((a, b) => Number(a) + Number(b) || 0),
+    [tokens]
+  );
+
   return (
     <div>
       <div>Portfolio value</div>
-      <div className="text-3xl font-bold mt-2">${totalBalance}</div>
+      <div className="text-3xl font-bold mt-2">${totalBalance.toFixed(2)}</div>
       <div className="bg-surface-default p-4 mt-10 rounded-lg">
         <Tab.Group>
-          <Tab.List className="rounded-xl gap-x-2 border border-gray-500 max-w-[210px]">
+          <Tab.List className="flex rounded-xl gap-x-2 border border-gray-500 max-w-[210px]">
             {Tabs.map(({ title }, index) => (
               <Tab key={index} as={Fragment}>
                 {({ selected }) => (
@@ -46,52 +48,11 @@ const Dashboard = () => {
           </Tab.List>
           <Tab.Panels>
             <Tab.Panel>
-              <DataTable>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Token</TableCell>
-                    <TableCell>Portfolio %</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Balance</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tokens &&
-                    tokens.map((token, index) => (
-                      <TableRow
-                        key={index}
-                        className="border-b dark:border-neutral-500"
-                      >
-                        <TableCell className="whitespace-nowrap font-bold">
-                          <div className="flex gap-x-5">
-                            <img src={token.logo} alt="eth" width={40} />
-                            <div className="space-y-1">
-                              <b className="uppercase">{token.symbol}</b>
-                              <p className="text-gray-500">{token.name}</p>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap font-bold">
-                          {portfolioPercent(token.usdBalance)}%
-                        </TableCell>
-
-                        <TableCell className="whitespace-nowrap font-bold">
-                          <div>{token.usdPrice.toString()}</div>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap font-bold">
-                          {token?.usdBalance && (
-                            <div>$ {token.usdBalance.toString()}</div>
-                          )}
-                          <div className="text-gray-500">
-                            {token.symbol} {token.balance.toString()}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </DataTable>
+              <TokenTable tokens={tokens} totalBalance={totalBalance} />
             </Tab.Panel>
-            <Tab.Panel>Content 2</Tab.Panel>
+            <Tab.Panel>
+              <TransactionsList />
+            </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
       </div>

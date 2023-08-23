@@ -2,9 +2,7 @@
 import ConnectWalletAuth from "./components/ConnectWalletAuth";
 import { useGlobalContext } from "./Context/store";
 import { ethers } from "ethers";
-import axios from "axios";
 import Dashboard from "./components/Dashboard";
-import { IToken } from "./types";
 
 export default function Home() {
   const {
@@ -26,10 +24,6 @@ export default function Home() {
         const { address }: { address: string } = await provider.getSigner();
         setIsAuthenticated(true);
         setAccounts([address]);
-        const { data }: { data: IToken[] } = await axios.get("api/tokens/", {
-          params: { address, chain: 0 },
-        });
-        setTokens(data);
         // const balance = await provider.getBalance("ricmoo.eth");
         // console.log({
         //   signer: signer.address,

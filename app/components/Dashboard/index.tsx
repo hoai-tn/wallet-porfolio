@@ -51,7 +51,7 @@ const Dashboard = () => {
               <TokenTable tokens={tokens} totalBalance={totalBalance} />
             </Tab.Panel>
             <Tab.Panel>
-              <TransactionsList />
+              <TransactionsList account={accounts[0]}/>
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

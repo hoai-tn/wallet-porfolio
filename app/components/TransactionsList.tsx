@@ -1,6 +1,7 @@
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useFetch from "./hooks/useFetch";
+import Image from "next/image";
 interface Transaction {
   from: string;
   to: string;
@@ -376,12 +377,12 @@ const TransactionsList = ({ account }) => {
         transactionsFetch.data
           .sort(
             (a, b) =>
-              moment(b.blockTimestamp).valueOf() -
-              moment(a.blockTimestamp).valueOf()
+              moment(b.block_timestamp).valueOf() -
+              moment(a.block_timestamp).valueOf()
           )
           .forEach((transaction) => {
             const date = moment
-              .utc(transaction.blockTimestamp)
+              .utc(transaction.block_timestamp)
               .format("MMM DD, YYYY");
             tempTransactions[date] = !!tempTransactions[date]
               ? [...tempTransactions[date], transaction]
@@ -391,6 +392,18 @@ const TransactionsList = ({ account }) => {
       return tempTransactions;
     });
   }, [transactionsFetch]);
+
+  const typeOfTransaction = useCallback(
+    (transaction) => {
+      return transaction?.decoded_call &&
+        !transaction?.decoded_call.params.filter((e) => e.name === "_to").length
+        ? transaction.decoded_call.label
+        : account === transaction.from_address
+        ? "Send"
+        : "Receive";
+    },
+    [transactions]
+  );
 
   if (isFetching) return <div>Fetching data</div>;
 
@@ -419,49 +432,55 @@ const TransactionsList = ({ account }) => {
                     </div>
                     <div>
                       <p className="font-semibold">
-                        {transaction.address === transaction.fromAddress
-                          ? "Send"
-                          : "Receive"}
+                        {typeOfTransaction(transaction)}
                       </p>
-                      <p className="text-subdued ">{moment(transaction.blockTimestamp).format("hh:mm A")}</p>
+                      <p className="text-subdued ">
+                        {moment(transaction.block_timestamp).format(
+                          "hh:mm:ss A"
+                        )}
+                      </p>
                     </div>
                   </div>
                   <div className="basis-2/12">
                     <p className="font-semibold">To</p>
                     <p className="text-subdued ">
-                      {truncateEthereumAddress(
-                       transaction.toAddress
-                      )}
+                      {truncateEthereumAddress(transaction.to_address)}{" "}
+                      {transaction.to_address === account && "(You)"}
                     </p>
                   </div>
                   <div className="basis-2/12">
                     <p className="font-semibold">From</p>
                     <p className="text-subdued ">
-                      {truncateEthereumAddress(
-                       transaction.fromAddress
-
-                      )}
+                      {truncateEthereumAddress(transaction.from_address)}
+                      {transaction.from_address === account && "(You)"}
                     </p>
                   </div>
-                  <div className="basis-2/12 flex items-center gap-x-2">
-                    <div className="bg-gray-800 w-[35px] h-[35px] p-2 rounded-full">
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: 20,
-                        }}
-                      >
-                        call_made
-                        {/* <span className="material-symbols-outlined">call_received</span> */}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-red-600">-001</p>
-                      <p className="text-subdued">WBTC</p>
+                  <div className="basis-2/12">
+                    <div className=" flex items-center gap-x-2">
+                      <img
+                        src={
+                          transaction.token_logo
+                            ? transaction.token_logo
+                            : "https://token.metaswap.codefi.network/assets/networkLogos/ethereum.svg"
+                        }
+                        alt="MetaMask"
+                        width={35}
+                        height={35}
+                      />
+                      <div>
+                        <p className="font-semibold">
+                          {Number(transaction?.value_decimal).toFixed(3)}
+                        </p>
+                        <p className="text-subdued">
+                          {transaction.token_symbol || "ETH"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="basis-1/12 flex justify-end gap-x-2 text-subdued">
-                    <div>0.008</div>
+                    <div>
+                      {Number(transaction?.gas) || 0}
+                    </div>
                     <div>ETH</div>
                   </div>
                 </div>

@@ -24,7 +24,7 @@ const TokenTable = ({ tokens, totalBalance }: ITokenTableProps) => {
       <TableBody>
         {tokens?.length ? (
           tokens.map((token, index) => (
-            <TableRow key={index} className="border-b dark:border-neutral-500">
+            <TableRow key={index} className="border-b dark:border-gray-700">
               <TableCell className="whitespace-nowrap font-bold">
                 <div className="flex gap-x-5">
                   <img src={token.logo} alt="eth" width={40} />
